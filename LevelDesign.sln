@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelDesign", "LevelDesign\LevelDesign.csproj", "{582FD03C-43AE-43E7-ABCA-EC6DDC6EBBCE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{582FD03C-43AE-43E7-ABCA-EC6DDC6EBBCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{582FD03C-43AE-43E7-ABCA-EC6DDC6EBBCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{582FD03C-43AE-43E7-ABCA-EC6DDC6EBBCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{582FD03C-43AE-43E7-ABCA-EC6DDC6EBBCE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E5CE27C-7EFC-4EEB-9470-25ABA38454CA}
+	EndGlobalSection
+EndGlobal
