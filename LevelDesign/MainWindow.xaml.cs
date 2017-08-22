@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
 using Microsoft.Win32;
+using MoonSharp.Interpreter;
 
 namespace LevelDesign
 {
@@ -12,6 +14,9 @@ namespace LevelDesign
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static MainWindow window;
+        private Script script;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -20,8 +25,19 @@ namespace LevelDesign
 
             DataContext = this;
 
-            CreatePlane(10, 10, MaterialHelper.CreateMaterial(Brushes.Green));
-            CreateBox(0, 0, 0.5, MaterialHelper.CreateMaterial(Brushes.Red));
+            window = this;
+
+            script = new Script();
+            script.Globals["CreatePlane"] = (Action<double, double, string>) CreatePlaneScript;
+            script.Globals["CreateBox"] = (Action<double, double, double, string>)CreateBoxScript;
+
+            var text = @"CreatePlane(10, 10, 'Pink');
+                         CreateBox(0, 0, 0.5, 'Red');";
+
+            script.DoString(text);
+          
+            //CreatePlane(10, 10, MaterialHelper.CreateMaterial(Brushes.Green));
+            //CreateBox(0, 0, 0.5, MaterialHelper.CreateMaterial(Brushes.Red));
         }
 
         public Model3DGroup Model { get; set; }
@@ -97,6 +113,18 @@ namespace LevelDesign
                 Transform = new TranslateTransform3D(x, y, z),
                 Material = material
             });
+        }
+
+        private static void CreatePlaneScript(double width, double depth, string materialName)
+        {
+            var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(materialName);
+            window.CreatePlane(width, depth, MaterialHelper.CreateMaterial(brush));
+        }
+
+        private static void CreateBoxScript(double x, double y, double z, string materialName)
+        {
+            var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(materialName);
+            window.CreateBox(x, y, z, MaterialHelper.CreateMaterial(brush));
         }
     }
 }
