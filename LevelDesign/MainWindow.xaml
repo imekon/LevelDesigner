@@ -11,6 +11,9 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_Open..." Click="OnOpen"/>
                 <MenuItem Header="_Save..." Click="OnSave"/>
+                <Separator/>
+                <MenuItem Header="_Export..." Click="OnExport"/>
+                <Separator/>
                 <MenuItem Header="E_xit" Click="OnExit"/>
             </MenuItem>
         </Menu>
@@ -19,7 +22,7 @@
             <StatusBarItem>Ready</StatusBarItem>
         </StatusBar>
 
-        <ht:HelixViewport3D Background="Black" ZoomExtentsWhenLoaded="True" ShowFrameRate="True">
+        <ht:HelixViewport3D x:Name="Viewport3D" Background="Black" ZoomExtentsWhenLoaded="True" ShowFrameRate="True">
             <ht:SunLight />
             <ModelVisual3D Content="{Binding Model}"/>
         </ht:HelixViewport3D>

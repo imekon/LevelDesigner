@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
@@ -125,6 +126,28 @@ namespace LevelDesign
         {
             var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(materialName);
             window.CreateBox(x, y, z, MaterialHelper.CreateMaterial(brush));
+        }
+
+        private void OnExport(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SaveFileDialog
+            {
+                DefaultExt = ".dae",
+                Filter = "Collada DAE files (*.dae)|*.dae"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var exporter = new ColladaExporter
+                {
+                    Author = "Level Designer"
+                };
+
+                using (var stream = File.Create(dialog.FileName))
+                {
+                    exporter.Export(Viewport3D.Viewport, stream);
+                }
+            }
         }
     }
 }
