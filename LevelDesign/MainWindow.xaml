@@ -22,7 +22,7 @@
             <StatusBarItem>Ready</StatusBarItem>
         </StatusBar>
 
-        <ht:HelixViewport3D x:Name="Viewport3D" Background="Black" ZoomExtentsWhenLoaded="True" ShowFrameRate="True">
+        <ht:HelixViewport3D x:Name="Viewport3D" ZoomExtentsWhenLoaded="True" ShowFrameRate="True">
             <ht:SunLight />
             <ModelVisual3D Content="{Binding Model}"/>
         </ht:HelixViewport3D>

@@ -15,7 +15,6 @@ namespace LevelDesign
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static MainWindow window;
         private Script script;
 
         public MainWindow()
@@ -26,14 +25,13 @@ namespace LevelDesign
 
             DataContext = this;
 
-            window = this;
-
             script = new Script();
             script.Globals["CreatePlane"] = (Action<double, double, string>) CreatePlaneScript;
-            script.Globals["CreateBox"] = (Action<double, double, double, string>)CreateBoxScript;
+            script.Globals["CreateBox"] = (Action<double, double, double, string>) CreateBoxScript;
+            script.Globals["CreateSphere"] = (Action<double, double, double, string>) CreateSphereScript;
 
             var text = @"CreatePlane(10, 10, 'Pink');
-                         CreateBox(0, 0, 0.5, 'Red');";
+                         CreateSphere(0, 0, 1, 'Red');";
 
             script.DoString(text);
           
@@ -42,6 +40,8 @@ namespace LevelDesign
         }
 
         public Model3DGroup Model { get; set; }
+
+        #region Commands
 
         private void OnOpen(object sender, RoutedEventArgs e)
         {
@@ -71,10 +71,36 @@ namespace LevelDesign
             }
         }
 
+        private void OnExport(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SaveFileDialog
+            {
+                DefaultExt = ".dae",
+                Filter = "Collada DAE files (*.dae)|*.dae"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var exporter = new ColladaExporter
+                {
+                    Author = "Level Designer"
+                };
+
+                using (var stream = File.Create(dialog.FileName))
+                {
+                    exporter.Export(Viewport3D.Viewport, stream);
+                }
+            }
+        }
+
         private void OnExit(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown(0);
         }
+
+        #endregion
+
+        #region Creators
 
         private void CreatePlane(double width, double depth, Material material)
         {
@@ -116,38 +142,45 @@ namespace LevelDesign
             });
         }
 
-        private static void CreatePlaneScript(double width, double depth, string materialName)
+        private void CreateSphere(double x, double y, double z, Material material)
+        {
+            var meshBuilder = new MeshBuilder(false, false);
+
+            meshBuilder.AddSphere(new Point3D(), 1);
+
+            var mesh = meshBuilder.ToMesh(true);
+
+            Model.Children.Add(new GeometryModel3D
+            {
+                Geometry = mesh,
+                Transform = new TranslateTransform3D(x, y, z),
+                Material = material
+            });
+
+        }
+
+        #endregion
+
+        #region Scripting
+
+        private void CreatePlaneScript(double width, double depth, string materialName)
         {
             var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(materialName);
-            window.CreatePlane(width, depth, MaterialHelper.CreateMaterial(brush));
+            CreatePlane(width, depth, MaterialHelper.CreateMaterial(brush));
         }
 
-        private static void CreateBoxScript(double x, double y, double z, string materialName)
+        private void CreateBoxScript(double x, double y, double z, string materialName)
         {
             var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(materialName);
-            window.CreateBox(x, y, z, MaterialHelper.CreateMaterial(brush));
+            CreateBox(x, y, z, MaterialHelper.CreateMaterial(brush));
         }
 
-        private void OnExport(object sender, RoutedEventArgs e)
+        private void CreateSphereScript(double x, double y, double z, string materialName)
         {
-            var dialog = new SaveFileDialog
-            {
-                DefaultExt = ".dae",
-                Filter = "Collada DAE files (*.dae)|*.dae"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                var exporter = new ColladaExporter
-                {
-                    Author = "Level Designer"
-                };
-
-                using (var stream = File.Create(dialog.FileName))
-                {
-                    exporter.Export(Viewport3D.Viewport, stream);
-                }
-            }
+            var brush = (SolidColorBrush)new BrushConverter().ConvertFromString(materialName);
+            CreateSphere(x, y, z, MaterialHelper.CreateMaterial(brush));
         }
+
+        #endregion
     }
 }
